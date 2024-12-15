@@ -2,11 +2,56 @@
 package main
 
 import (
-	"aoc2024/utils"
 	"fmt"
 	"log"
+	"os"
 	"sort"
+	"strconv"
+	"strings"
 )
+
+func readArrays(filename string, numColumns int) ([][]int, error) {
+	// Open and read the file
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read file: %v", err)
+	}
+
+	// Initialize a slice to hold arrays for each column
+	columns := make([][]int, numColumns)
+	for i := range columns {
+		columns[i] = []int{}
+	}
+
+	// Split the file into lines
+	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
+
+	for _, line := range lines {
+		// Split each line into parts
+		parts := strings.Fields(line)
+		if len(parts) != numColumns {
+			return nil, fmt.Errorf("invalid line format: %q (expected %d columns)", line, numColumns)
+		}
+
+		// Convert each part to an integer and append it to the corresponding column
+		for i := 0; i < numColumns; i++ {
+			num, err := strconv.Atoi(parts[i])
+			if err != nil {
+				return nil, fmt.Errorf("error converting number %q on line: %q", parts[i], line)
+			}
+			columns[i] = append(columns[i], num)
+		}
+	}
+	return columns, nil
+}
+
+// Helper function to calculate the absolute value of a number
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
 
 func solvePart1(arr1, arr2 []int) int {
 	// Sort both slices
@@ -15,7 +60,7 @@ func solvePart1(arr1, arr2 []int) int {
 	// Calculate the absolute differences and sum them
 	acc := 0
 	for i := 0; i < len(arr1) && i < len(arr2); i++ {
-		acc += utils.Abs(arr1[i] - arr2[i])
+		acc += abs(arr1[i] - arr2[i])
 	}
 	return acc
 }
@@ -83,7 +128,7 @@ func solvePart2(arr1, arr2 []int) int {
 
 func main() {
 	// Read the input arrays
-	columns, err := utils.ReadArrays("input.txt", 2)
+	columns, err := readArrays("input.txt", 2)
 	if err != nil {
 		log.Fatal(err)
 	}
