@@ -94,6 +94,7 @@ func solvePart2(data []int) int {
 		if i%2 != 0 {
 			continue
 		}
+		// Arithmetic progression: Sn = n * (a_1+a_n) / 2
 		checksum += file.id * (file.size * (file.startPosition + file.startPosition + file.size - 1) / 2)
 	}
 	return checksum
