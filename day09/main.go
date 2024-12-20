@@ -1,4 +1,4 @@
-// day08.go
+// day09.go
 package main
 
 import (
