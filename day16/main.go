@@ -143,7 +143,7 @@ func solvePart1(data [][]rune) int {
 	heap.Push(pq, &Item{startX, startY, EAST, 0, nil})
 
 	costs := make(map[State]int)
-	costs[State{startX, startY, 0}] = 0
+	costs[State{startX, startY, EAST}] = 0
 
 	// Dijkstra's algorithm
 	for pq.Len() > 0 {
@@ -202,8 +202,8 @@ func solvePart2(data [][]rune) int {
 	costs := make(map[State]int)
 	states := make(map[State]*Item)
 
-	states[State{startX, startY, 0}] = start
-	costs[State{startX, startY, 0}] = 0
+	states[State{startX, startY, EAST}] = start
+	costs[State{startX, startY, EAST}] = 0
 	minGoalCost := -1 // Track the minimum cost to reach the goal
 	var goalStates []*Item
 
