@@ -10,10 +10,11 @@ import (
 	"strings"
 )
 
-func parseFile(filename string) (registersData [3]int, program []int) {
-	file, err := os.Open(filename)
-	if err != nil {
-		panic(err)
+func parseFile(filename string) (registersData [3]int, program []int, err error) {
+	file, errF := os.Open(filename)
+	if errF != nil {
+		err = errF
+		return
 	}
 	defer file.Close()
 
@@ -22,9 +23,10 @@ func parseFile(filename string) (registersData [3]int, program []int) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		if len(line) > 0 && strings.HasPrefix(line, "Register") {
-			reg, err := strconv.Atoi(strings.Split(line, ": ")[1])
-			if err != nil {
-				panic(err)
+			reg, errC := strconv.Atoi(strings.Split(line, ": ")[1])
+			if errC != nil {
+				err = errC
+				return
 			}
 			if regIndex < 3 {
 				registersData[regIndex] = reg
@@ -33,17 +35,19 @@ func parseFile(filename string) (registersData [3]int, program []int) {
 		}
 		if len(line) > 0 && strings.HasPrefix(line, "Program") {
 			for _, strCode := range strings.Split(strings.Split(line, ": ")[1], ",") {
-				code, err := strconv.Atoi(strCode)
-				if err != nil {
-					panic(err)
+				code, errC := strconv.Atoi(strCode)
+				if errC != nil {
+					err = errC
+					return
 				}
 				program = append(program, code)
 			}
 		}
 	}
 
-	if err = scanner.Err(); err != nil {
-		panic(err)
+	if errS := scanner.Err(); errS != nil {
+		err = errS
+		return
 	}
 
 	return
@@ -137,7 +141,11 @@ func solvePart2(data [3]int, program []int) int {
 }
 
 func main() {
-	registersData, program := parseFile("input.txt")
+	registersData, program, err := parseFile("input.txt")
+	if err != nil {
+		fmt.Printf("Error parsing file: %v\n", err)
+		os.Exit(1)
+	}
 	fmt.Println("Part 1: ", solvePart1(registersData, program))
 	fmt.Println("Part 2: ", solvePart2(registersData, program))
 }
