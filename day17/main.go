@@ -102,7 +102,7 @@ func (c *Computer) runProgram() {
 func (c *Computer) reset(ra, rb, rc int) {
 	c.ra, c.rb, c.rc = ra, rb, rc
 	c.pc = 0
-	c.out = []int{}
+	c.out = nil
 }
 
 func (c *Computer) output() (out string) {
@@ -116,8 +116,7 @@ func (c *Computer) output() (out string) {
 }
 
 func solvePart1(data [3]int, program []int) string {
-	computer := Computer{program: program}
-	computer.reset(data[0], data[1], data[2])
+	computer := Computer{ra: data[0], rb: data[1], rc: data[2], program: program}
 	computer.runProgram()
 	return computer.output()
 }
