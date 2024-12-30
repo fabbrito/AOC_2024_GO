@@ -1,4 +1,4 @@
-// day16.go
+// day17.go
 package main
 
 import (
